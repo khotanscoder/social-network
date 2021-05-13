@@ -1,7 +1,5 @@
 import pandas as pd
 
-
-
 def update_csv(username):
         file_path = 'accounts.csv'
 
@@ -14,10 +12,7 @@ def update_csv(username):
         # import os
         # os.remove(file_path)
         df_updated.to_csv(file_path, index=False)
-
-
-
+        
 username = 'zahra'
 
 update_csv(username)
-

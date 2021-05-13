@@ -49,7 +49,7 @@ if __name__ == '__main__':
                     sp.run('clear')
                     print('The posts are: ')
                     print('=' * 20)
-                    Post.show_posts()
+                    Post.show_posts(just_show=True)
 
                 # elif main_menu_option == '2' :
                 #     User.show_friends()
@@ -94,6 +94,9 @@ if __name__ == '__main__':
 
                 elif main_menu_option == '7':
                     User.send_request()
+                elif main_menu_option == '8':
+                    Post.write_comment()
+
 
     elif login_or_register == '2':
         username = input('Please enter username:')
