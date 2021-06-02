@@ -40,7 +40,6 @@ class Post:
 
         with open(post_file_path, 'r') as posts:
             reader = csv.reader(posts)
-
             counter = 0
             for index, p in enumerate(reader):
                 if not(len(p) == 0 or index == 0):
@@ -52,6 +51,7 @@ class Post:
                 back_to_main_menu = input('Please enter  to go back to the main menu. ')
             else:
                 number_of_comment = input('Please enter the number of post on which you want to comment: ')
+                
                 return int(number_of_comment)
 
 
@@ -59,8 +59,11 @@ class Post:
     def write_comment():
         post_file_path = "posts.csv"
         number_of_comment = Post.show_posts(just_show=False)
-        
+        comment = input('Please enter your comment:  ')
+
         with open(post_file_path, 'r+') as posts:
+            print('enetered')
+            time.sleep(5)
             reader = csv.reader(posts)
             counter = 0
             for index, p in enumerate(reader):
@@ -68,7 +71,7 @@ class Post:
                 if not(len(p) == 0 or index == 0):
                     if counter == number_of_comment:
                         print(p)
-                        comment = input('Please enter your comment:  ')
+                        
                         updated_post = []
                         updated_post.append(p[0])
                         updated_post.append(p[1])
@@ -77,18 +80,7 @@ class Post:
                         updated_post.append(p[4])
                         ','.join(updated_post)
                         writer = csv.writer(posts)
-
-                        # for l in writer:
-                        #     if l == counter:
                         writer.writerow(comment)
                         print(updated_post)
                         time.sleep(10)
 
-
-
-
-        
-
-
-
-    

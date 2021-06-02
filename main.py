@@ -1,14 +1,16 @@
 # import termcolored
+from read_users import list_users
 import subprocess as sp
 import uuid
 
-from user import User
+from pandas.core.construction import create_series_with_explicit_dtype
+
+from User import User
 from Post import Post
-from profile import Profile
+from Profile import Profile
 
+if __name__ == '__main__':
 
-if __name__ == '__main__': 
-       
     sp.run('clear')
     print("_________Welcome to Khotan's Club_________")
     print(' ')
@@ -16,34 +18,37 @@ if __name__ == '__main__':
     print('2: Register')
     print('3: Exit.')
 
-    login_or_register = input('Please enter 1 to login, 2 to sign up, 3 to exit: ')
+    login_or_register = input(
+        'Please enter 1 to login, 2 to sign up, 3 to exit: ')
 
     if login_or_register == '1':
         username = input('Please enter username: ')
         password = input('Please enter password: ')
 
-        is_logged_in, user_id = User.login(username, password)
+        is_logged_in, user = User.login(username, password)
 
         if is_logged_in == False:
             print("The given username or password is incorrect!")
-        elif is_logged_in == True:
 
+        elif is_logged_in == True:
             while True:
                 sp.run('clear')
-                print(f"++++++++++++{username} logged in successfully++++++++++++")
+                print(
+                    f"++++++++++++{username} logged in successfully++++++++++++")
                 print(' ')
                 print(' ')
                 print('1: Posts')
                 print('2: Friends')
                 print('3: Profile')
                 print('4: Post Something')
-                print('5: Exit')
-                print('6: List All Users')
-                print('7: Sent A Request')
-                print('8: write comment')
+                print('5: List All Users')
+                print('6: write comment')
+                print('7: Follow someone')
+                print('x: Exit')
                 print(' ')
 
-                main_menu_option = input('Please choose one of the above options: ')
+                main_menu_option = input(
+                    'Please choose one of the above options: ')
 
                 if main_menu_option == '1':
                     sp.run('clear')
@@ -51,64 +56,76 @@ if __name__ == '__main__':
                     print('=' * 20)
                     Post.show_posts(just_show=True)
 
-                # elif main_menu_option == '2' :
-                #     User.show_friends()
+                elif main_menu_option == '2':
+                    for followee_username in user.get_user_followings():
+                        print(followee_username)
+                    input('Please enter  to go back to the main menu. ')
 
                 elif main_menu_option == '3':
-                    print('1: See your own profile')
-                    print('2: See others profile')
+                    sp.run('clear')
+                    print('1: Show your profile')
+                    print('2: Edit your profile')
+                    print("3: Show others' profile")
+                    print(' ')
+                    edit_or_show = input(
+                        'Please enter one of the options above: ')
 
-                    main_menu_option = input('Please choose one of the above options: ')
+                    if edit_or_show == '1':
+                        User.show_profile(username)
 
-                    if main_menu_option == '1':
-                        username = username
-                        Profile.show_profile(username)
-
-                        print('')
-                        print('1: Edit your profile')
-                        print('2: Exit')
-
-                        main_menu_option = input('Please choose one of the above options: ')
-                        if main_menu_option == '1':
-                            Profile.edit_profile()
-
-                        elif main_menu_option == '2':
-                            break
-
-                    elif main_menu_option == '2':
-                        username = input('Please enter the username to which you want to visit the profile : ')
-                        Profile.show_others_profile(username)
-
+                    elif edit_or_show == '2':
+                        tmp_phone_number = input("plese insert new phone_number, enter for skip: ")
+                        tmp_email = input("plese insert new email, enter for skip: ")
+                        tmp_bio = input("plese insert new bio, enter for skip: ")
                         
-                elif main_menu_option == '4':
-                    post_string = input('Please enter your post content:   || ')
-                    post_id = uuid.uuid4()
-                    post_obj = Post(user_id,post_id, post_string)
-                    post_obj.write_post_on_csv()
-                
-                elif main_menu_option == '5':
-                    break
-                
-                elif main_menu_option == '6':
-                    User.show_users()
+                        updated_phone_number = tmp_phone_number if tmp_phone_number != "" else user.phone_number
+                        updated_email = tmp_email if tmp_email != "" else user.email
+                        updated_bio = tmp_bio if tmp_bio != "" else user.bio
 
-                elif main_menu_option == '7':
-                    User.send_request()
-                elif main_menu_option == '8':
+                        user.update_profile_info(phone_number=updated_phone_number, email=updated_email, bio=updated_bio)
+                        
+
+                    elif edit_or_show == '3':
+                        User.show_others_profile(username)
+                    
+                    input('Please enter  to go back to the main menu. ')
+
+                elif main_menu_option == '4':
+                    post_string = input(
+                        'Please enter your post content:   || ')
+                    post_id = uuid.uuid4()
+                    post_obj = Post(user_id, post_id, post_string)
+                    post_obj.write_post_on_csv()
+
+                elif main_menu_option == '5':
+                    User.show_users()
+                    input('Please enter  to go back to the main menu. ')
+
+                elif main_menu_option == '6':
                     Post.write_comment()
 
+                elif main_menu_option == '7':
+                    to_follow_user = input(
+                        "Please enter name of the user you want to follow: ")
+                    user.follow_user(to_follow_user)
+                    input('Please enter  to go back to the main menu. ')
+
+                elif main_menu_option == 'x':
+
+                    break
 
     elif login_or_register == '2':
         username = input('Please enter username:')
         password = input('Please enter password:')
         password2 = input('Please enter password again: ')
-        user_id = uuid.uuid4()
 
         if not(password == password2):
             print('The passwords are not the same.')
             exit()
 
-        user = User(username, password)
+        user = User(username=username, password=password)
+        profile = Profile(username)
+        profile.save_profile()
         user.register()
 
     elif login_or_register == '3':
