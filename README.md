@@ -1,0 +1,1 @@
+This project is aimed at providing the basic functionality of a social media; using csv file as storage and command line as its interface.
