@@ -1,5 +1,3 @@
-# import termcolored
-from read_users import list_users
 import subprocess as sp
 import uuid
 
@@ -7,7 +5,7 @@ from pandas.core.construction import create_series_with_explicit_dtype
 
 from User import User
 from Post import Post
-from Profile import Profile
+from logger import log
 
 if __name__ == '__main__':
 
@@ -28,9 +26,10 @@ if __name__ == '__main__':
         is_logged_in, user = User.login(username, password)
 
         if is_logged_in == False:
-            print("The given username or password is incorrect!")
+            print("The given username or password is incorrect!")           
 
         elif is_logged_in == True:
+            log("logged_in", user)
             while True:
                 sp.run('clear')
                 print(
@@ -51,17 +50,20 @@ if __name__ == '__main__':
                     'Please choose one of the above options: ')
 
                 if main_menu_option == '1':
+                    log("posts", user)
                     sp.run('clear')
                     print('The posts are: ')
                     print('=' * 20)
                     Post.show_posts(just_show=True)
 
                 elif main_menu_option == '2':
+                    log("friends", user)
                     for followee_username in user.get_user_followings():
                         print(followee_username)
                     input('Please enter  to go back to the main menu. ')
 
                 elif main_menu_option == '3':
+                    log("profile", user)
                     sp.run('clear')
                     print('1: Show your profile')
                     print('2: Edit your profile')
@@ -71,9 +73,11 @@ if __name__ == '__main__':
                         'Please enter one of the options above: ')
 
                     if edit_or_show == '1':
+                        log("show_profile", user)
                         User.show_profile(username)
 
                     elif edit_or_show == '2':
+                        log("edit_profile", user)
                         tmp_phone_number = input("plese insert new phone_number, enter for skip: ")
                         tmp_email = input("plese insert new email, enter for skip: ")
                         tmp_bio = input("plese insert new bio, enter for skip: ")
@@ -86,11 +90,13 @@ if __name__ == '__main__':
                         
 
                     elif edit_or_show == '3':
+                        log("show_all_profiles", user)
                         User.show_others_profile(username)
                     
                     input('Please enter  to go back to the main menu. ')
 
                 elif main_menu_option == '4':
+                    log("post something", user)
                     post_string = input(
                         'Please enter your post content:   || ')
                     post_id = uuid.uuid4()
@@ -98,13 +104,17 @@ if __name__ == '__main__':
                     post_obj.write_post_on_csv()
 
                 elif main_menu_option == '5':
+                    log("list all users", user)
                     User.show_users()
                     input('Please enter  to go back to the main menu. ')
 
                 elif main_menu_option == '6':
+                    log("write comment", user)
                     Post.write_comment()
 
                 elif main_menu_option == '7':
+                    log("follow someone", user)
+                    User.show_users()
                     to_follow_user = input(
                         "Please enter name of the user you want to follow: ")
                     user.follow_user(to_follow_user)
@@ -124,9 +134,8 @@ if __name__ == '__main__':
             exit()
 
         user = User(username=username, password=password)
-        profile = Profile(username)
-        profile.save_profile()
         user.register()
+        log("registered", user)
 
     elif login_or_register == '3':
         exit()

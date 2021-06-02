@@ -1,7 +1,6 @@
 import subprocess as sp
 import csv
 from csv import DictReader, DictWriter
-
 import hashlib
 import uuid
 
@@ -186,7 +185,6 @@ class User():
             return
 
         user_followings = self.get_user_followings()
-        print(user_followings)
         if followee.username in user_followings:
             print(f"You've already followed this account: {followee.username}")
             return
